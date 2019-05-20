@@ -95,7 +95,7 @@ class RegistrationForm extends React.Component {
                   type="password"
                 />
                 <Button color="teal" fluid size="large">
-                  Login
+                  Signup
                 </Button>
               </Segment>
             </Form>

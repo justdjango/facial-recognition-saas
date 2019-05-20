@@ -42,8 +42,8 @@ export const authLogin = (username, password) => {
     dispatch(authStart());
     axios
       .post("http://127.0.0.1:8000/rest-auth/login/", {
-        username: username,
-        password: password
+        username,
+        password
       })
       .then(res => {
         const token = res.data.key;
@@ -54,7 +54,8 @@ export const authLogin = (username, password) => {
         dispatch(checkAuthTimeout(3600));
       })
       .catch(err => {
-        dispatch(authFail(err));
+        console.log(err.response.data.non_field_errors[0]);
+        dispatch(authFail(err.response.data.non_field_errors[0]));
       });
   };
 };

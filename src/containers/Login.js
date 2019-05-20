@@ -9,26 +9,41 @@ import {
   Segment
 } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import * as actions from "../store/actions/auth";
+import { Link, Redirect } from "react-router-dom";
+import { authLogin as login } from "../store/actions/auth";
 
 class NormalLoginForm extends React.Component {
+  state = {
+    username: "",
+    password: "",
+    formError: null
+  };
+
   handleSubmit = e => {
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        this.props.onAuth(values.userName, values.password);
-        this.props.history.push("/");
-      }
+    const { username, password } = this.state;
+    if (username !== "" && password !== "") {
+      this.props.login(username, password);
+    } else {
+      this.setState({
+        formError: "Please enter all the form fields"
+      });
+    }
+  };
+
+  handleChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value,
+      formError: null
     });
   };
 
   render() {
-    let errorMessage = null;
-    if (this.props.error) {
-      errorMessage = <p>{this.props.error.message}</p>;
+    const { loading, error, authenticated } = this.props;
+    if (authenticated) {
+      return <Redirect to="/" />;
     }
-
+    const { formError } = this.state;
     return (
       <div style={{ marginTop: "100px" }}>
         <Grid
@@ -38,15 +53,17 @@ class NormalLoginForm extends React.Component {
         >
           <Grid.Column style={{ maxWidth: 450 }}>
             <Header as="h2" color="teal" textAlign="center">
-              <Image src="/logo.png" /> Log-in to your account
+              <Image src="/logo.png" /> Login to your account
             </Header>
-            <Form size="large">
+            <Form size="large" onSubmit={this.handleSubmit}>
               <Segment stacked>
                 <Form.Input
                   fluid
                   icon="user"
                   iconPosition="left"
-                  placeholder="E-mail address"
+                  placeholder="Username"
+                  onChange={this.handleChange}
+                  name="username"
                 />
                 <Form.Input
                   fluid
@@ -54,13 +71,33 @@ class NormalLoginForm extends React.Component {
                   iconPosition="left"
                   placeholder="Password"
                   type="password"
+                  onChange={this.handleChange}
+                  name="password"
                 />
 
-                <Button color="teal" fluid size="large">
+                <Button
+                  color="teal"
+                  fluid
+                  size="large"
+                  disabled={loading}
+                  loading={loading}
+                >
                   Login
                 </Button>
               </Segment>
             </Form>
+            {formError && (
+              <Message negative>
+                <Message.Header>There was an error</Message.Header>
+                <p>{formError}</p>
+              </Message>
+            )}
+            {error && (
+              <Message negative>
+                <Message.Header>There was an error</Message.Header>
+                <p>{error}</p>
+              </Message>
+            )}
             <Message>
               New to us? <Link to="/signup">Sign Up</Link>
             </Message>
@@ -74,14 +111,14 @@ class NormalLoginForm extends React.Component {
 const mapStateToProps = state => {
   return {
     loading: state.auth.loading,
-    error: state.auth.error
+    error: state.auth.error,
+    authenticated: state.auth.token !== null
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: (username, password) =>
-      dispatch(actions.authLogin(username, password))
+    login: (username, password) => dispatch(login(username, password))
   };
 };
 
