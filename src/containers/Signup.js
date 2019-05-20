@@ -9,52 +9,68 @@ import {
   Segment
 } from "semantic-ui-react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import * as actions from "../store/actions/auth";
+import { Link, Redirect } from "react-router-dom";
+import { authSignup as signup } from "../store/actions/auth";
 
 class RegistrationForm extends React.Component {
   state = {
-    confirmDirty: false
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    formError: null
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        this.props.onAuth(
-          values.userName,
-          values.email,
-          values.password,
-          values.confirm
-        );
-        this.props.history.push("/");
-      }
+    const { username, email, password, confirmPassword } = this.state;
+    console.log(username, email, password, confirmPassword);
+    if (
+      username !== "" &&
+      email !== "" &&
+      password !== "" &&
+      confirmPassword !== "" &&
+      this.comparePasswords() === true &&
+      this.comparePasswordLengths() === true
+    )
+      this.props.signup(username, email, password, confirmPassword);
+  };
+
+  comparePasswords = () => {
+    const { password, confirmPassword } = this.state;
+    if (password !== confirmPassword) {
+      this.setState({ formError: "Your passwords do not match" });
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  comparePasswordLengths = () => {
+    const { password, confirmPassword } = this.state;
+    if (password.length >= 6 && confirmPassword >= 6) {
+      return true;
+    } else {
+      this.setState({
+        formError: "Your password must be a minimum of 6 characters"
+      });
+      return false;
+    }
+  };
+
+  handleChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value,
+      formError: null
     });
   };
 
-  handleConfirmBlur = e => {
-    const value = e.target.value;
-    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-  };
-
-  compareToFirstPassword = (rule, value, callback) => {
-    const form = this.props.form;
-    if (value && value !== form.getFieldValue("password")) {
-      callback("Two passwords that you enter is inconsistent!");
-    } else {
-      callback();
-    }
-  };
-
-  validateToNextPassword = (rule, value, callback) => {
-    const form = this.props.form;
-    if (value && this.state.confirmDirty) {
-      form.validateFields(["confirm"], { force: true });
-    }
-    callback();
-  };
-
   render() {
+    const { formError } = this.state;
+    const { loading, error, authenticated } = this.props;
+    if (authenticated) {
+      return <Redirect to="/" />;
+    }
     return (
       <div style={{ marginTop: "100px" }}>
         <Grid
@@ -66,19 +82,24 @@ class RegistrationForm extends React.Component {
             <Header as="h2" color="teal" textAlign="center">
               <Image src="/logo.png" /> Create an account
             </Header>
-            <Form size="large">
+            <Form size="large" onSubmit={this.handleSubmit}>
               <Segment stacked>
                 <Form.Input
                   fluid
                   icon="user"
                   iconPosition="left"
                   placeholder="Username"
+                  name="username"
+                  onChange={this.handleChange}
                 />
                 <Form.Input
                   fluid
                   icon="mail"
                   iconPosition="left"
                   placeholder="E-mail address"
+                  name="email"
+                  type="email"
+                  onChange={this.handleChange}
                 />
                 <Form.Input
                   fluid
@@ -86,6 +107,8 @@ class RegistrationForm extends React.Component {
                   iconPosition="left"
                   placeholder="Password"
                   type="password"
+                  name="password"
+                  onChange={this.handleChange}
                 />
                 <Form.Input
                   fluid
@@ -93,12 +116,32 @@ class RegistrationForm extends React.Component {
                   iconPosition="left"
                   placeholder="Confirm Password"
                   type="password"
+                  name="confirmPassword"
+                  onChange={this.handleChange}
                 />
-                <Button color="teal" fluid size="large">
+                <Button
+                  color="teal"
+                  fluid
+                  size="large"
+                  disabled={loading}
+                  loading={loading}
+                >
                   Signup
                 </Button>
               </Segment>
             </Form>
+            {formError && (
+              <Message negative>
+                <Message.Header>There was an error</Message.Header>
+                <p>{formError}</p>
+              </Message>
+            )}
+            {error && (
+              <Message negative>
+                <Message.Header>There was an error</Message.Header>
+                <p>{error}</p>
+              </Message>
+            )}
             <Message>
               Already have an account? <Link to="/login">Login</Link>
             </Message>
@@ -112,14 +155,15 @@ class RegistrationForm extends React.Component {
 const mapStateToProps = state => {
   return {
     loading: state.auth.loading,
-    error: state.auth.error
+    error: state.auth.error,
+    authenticated: state.auth.token !== null
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: (username, email, password1, password2) =>
-      dispatch(actions.authSignup(username, email, password1, password2))
+    signup: (username, email, password1, password2) =>
+      dispatch(signup(username, email, password1, password2))
   };
 };
 

@@ -39,11 +39,11 @@ class NormalLoginForm extends React.Component {
   };
 
   render() {
+    const { formError } = this.state;
     const { loading, error, authenticated } = this.props;
     if (authenticated) {
       return <Redirect to="/" />;
     }
-    const { formError } = this.state;
     return (
       <div style={{ marginTop: "100px" }}>
         <Grid
