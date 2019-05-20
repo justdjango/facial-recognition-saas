@@ -22,7 +22,6 @@ class DesktopContainer extends Component {
   render() {
     const { children, isAuthenticated } = this.props;
     const { fixed } = this.state;
-
     return (
       <Responsive getWidth={getWidth} minWidth={Responsive.onlyTablet.minWidth}>
         <Visibility
@@ -58,12 +57,23 @@ class DesktopContainer extends Component {
                 </Menu.Item>
                 <Menu.Item position="right">
                   {isAuthenticated ? (
-                    <Button
-                      inverted={!fixed}
-                      onClick={() => this.props.logout()}
-                    >
-                      Logout
-                    </Button>
+                    <React.Fragment>
+                      <Button
+                        inverted={!fixed}
+                        onClick={() => this.props.logout()}
+                      >
+                        Logout
+                      </Button>
+                      <Button
+                        primary
+                        inverted
+                        onClick={() =>
+                          this.props.history.push("/account/change-email")
+                        }
+                      >
+                        Account
+                      </Button>
+                    </React.Fragment>
                   ) : (
                     <React.Fragment>
                       <Button

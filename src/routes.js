@@ -5,6 +5,7 @@ import Login from "./containers/Login";
 import Signup from "./containers/Signup";
 import LandingPage from "./containers/LandingPage";
 import Demo from "./containers/Demo";
+import ChangeEmail from "./containers/Account/ChangeEmail";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const authenticated = localStorage.getItem("token") !== null;
@@ -33,7 +34,7 @@ const BaseRouter = () => (
     <Route path="/login" component={Login} />
     <Route path="/signup" component={Signup} />
     <Route path="/demo" component={Demo} />
-    <PrivateRoute path="/account" component={LandingPage} />
+    <PrivateRoute path="/account/change-email" component={ChangeEmail} />
   </Hoc>
 );
 

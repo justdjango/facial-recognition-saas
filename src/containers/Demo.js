@@ -13,7 +13,6 @@ import {
   Dimmer
 } from "semantic-ui-react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import { fileUploadURL, facialRecognitionURL } from "../constants";
 import FaceIMG from "../assets/images/face.png";
 import ShortParagraphIMG from "../assets/images/short_paragraph.png";
