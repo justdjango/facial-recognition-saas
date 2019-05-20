@@ -8,6 +8,7 @@ import {
   Segment,
   Visibility
 } from "semantic-ui-react";
+import { Link, withRouter } from "react-router-dom";
 import { getWidth } from "../../utils";
 
 class DesktopContainer extends Component {
@@ -41,14 +42,25 @@ class DesktopContainer extends Component {
               size="large"
             >
               <Container>
-                <Menu.Item as="a" active>
+                <Menu.Item
+                  as="a"
+                  active
+                  onClick={() => this.props.history.push("/")}
+                >
                   Home
                 </Menu.Item>
-                <Menu.Item as="a">Work</Menu.Item>
-                <Menu.Item as="a">Company</Menu.Item>
-                <Menu.Item as="a">Careers</Menu.Item>
+                <Menu.Item
+                  as="a"
+                  onClick={() => this.props.history.push("/demo")}
+                >
+                  Demo
+                </Menu.Item>
                 <Menu.Item position="right">
-                  <Button as="a" inverted={!fixed}>
+                  <Button
+                    as="a"
+                    inverted={!fixed}
+                    onClick={() => this.props.history.push("/login")}
+                  >
                     Log in
                   </Button>
                   <Button
@@ -56,6 +68,7 @@ class DesktopContainer extends Component {
                     inverted={!fixed}
                     primary={fixed}
                     style={{ marginLeft: "0.5em" }}
+                    onClick={() => this.props.history.push("/signup")}
                   >
                     Sign Up
                   </Button>
@@ -75,4 +88,4 @@ DesktopContainer.propTypes = {
   children: PropTypes.node
 };
 
-export default DesktopContainer;
+export default withRouter(DesktopContainer);

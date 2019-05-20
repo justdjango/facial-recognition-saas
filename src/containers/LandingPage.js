@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React from "react";
 import {
   Button,
@@ -10,22 +9,9 @@ import {
   List,
   Segment
 } from "semantic-ui-react";
-import DesktopContainer from "./Layout/DesktopContainer";
-import MobileContainer from "./Layout/MobileContainer";
-
-const ResponsiveContainer = ({ children }) => (
-  <div>
-    <DesktopContainer>{children}</DesktopContainer>
-    <MobileContainer>{children}</MobileContainer>
-  </div>
-);
-
-ResponsiveContainer.propTypes = {
-  children: PropTypes.node
-};
 
 const HomepageLayout = () => (
-  <ResponsiveContainer>
+  <React.Fragment>
     <Segment style={{ padding: "8em 0em" }} vertical>
       <Grid container stackable verticalAlign="middle">
         <Grid.Row>
@@ -155,6 +141,7 @@ const HomepageLayout = () => (
         </Grid>
       </Container>
     </Segment>
-  </ResponsiveContainer>
+  </React.Fragment>
 );
+
 export default HomepageLayout;
