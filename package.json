@@ -4,12 +4,12 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
-    "react": "^16.4.1",
+    "react": "^16.8.6",
     "react-dom": "^16.4.1",
-    "react-redux": "^5.0.7",
+    "react-redux": "^5.1.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
-    "redux": "^4.0.0",
+    "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.87.1"
