@@ -8,7 +8,9 @@ import {
   Segment,
   Visibility
 } from "semantic-ui-react";
-import { Link, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { logout } from "../../store/actions/auth";
+import { withRouter } from "react-router-dom";
 import { getWidth } from "../../utils";
 
 class DesktopContainer extends Component {
@@ -18,7 +20,7 @@ class DesktopContainer extends Component {
   showFixedMenu = () => this.setState({ fixed: true });
 
   render() {
-    const { children } = this.props;
+    const { children, isAuthenticated } = this.props;
     const { fixed } = this.state;
 
     return (
@@ -43,35 +45,43 @@ class DesktopContainer extends Component {
             >
               <Container>
                 <Menu.Item
-                  as="a"
-                  active
+                  active={this.props.location.pathname === "/"}
                   onClick={() => this.props.history.push("/")}
                 >
                   Home
                 </Menu.Item>
                 <Menu.Item
-                  as="a"
+                  active={this.props.location.pathname === "/demo"}
                   onClick={() => this.props.history.push("/demo")}
                 >
                   Demo
                 </Menu.Item>
                 <Menu.Item position="right">
-                  <Button
-                    as="a"
-                    inverted={!fixed}
-                    onClick={() => this.props.history.push("/login")}
-                  >
-                    Log in
-                  </Button>
-                  <Button
-                    as="a"
-                    inverted={!fixed}
-                    primary={fixed}
-                    style={{ marginLeft: "0.5em" }}
-                    onClick={() => this.props.history.push("/signup")}
-                  >
-                    Sign Up
-                  </Button>
+                  {isAuthenticated ? (
+                    <Button
+                      inverted={!fixed}
+                      onClick={() => this.props.logout()}
+                    >
+                      Logout
+                    </Button>
+                  ) : (
+                    <React.Fragment>
+                      <Button
+                        inverted={!fixed}
+                        onClick={() => this.props.history.push("/login")}
+                      >
+                        Login
+                      </Button>
+                      <Button
+                        inverted={!fixed}
+                        primary={fixed}
+                        style={{ marginLeft: "0.5em" }}
+                        onClick={() => this.props.history.push("/signup")}
+                      >
+                        Signup
+                      </Button>
+                    </React.Fragment>
+                  )}
                 </Menu.Item>
               </Container>
             </Menu>
@@ -88,4 +98,21 @@ DesktopContainer.propTypes = {
   children: PropTypes.node
 };
 
-export default withRouter(DesktopContainer);
+const mapStateToProps = state => {
+  return {
+    isAuthenticated: state.auth.token !== null
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    logout: () => dispatch(logout())
+  };
+};
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(DesktopContainer)
+);

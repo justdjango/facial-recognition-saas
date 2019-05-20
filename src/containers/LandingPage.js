@@ -2,7 +2,6 @@ import React from "react";
 import {
   Button,
   Container,
-  Divider,
   Grid,
   Header,
   Image,
@@ -50,7 +49,7 @@ const HomepageLayout = () => (
           Test our API for free for the new two weeks. No credit card required.
         </p>
         <Link to="/login">
-          <Button positive as="a" size="large">
+          <Button positive size="large">
             Start my free trial
           </Button>
         </Link>
@@ -61,7 +60,7 @@ const HomepageLayout = () => (
           Pay for what you use, at $0.05 per request.
         </p>
         <Link to="/login">
-          <Button primary as="a" size="large">
+          <Button primary size="large">
             Start now
           </Button>
         </Link>

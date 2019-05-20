@@ -9,6 +9,9 @@ import {
   Segment,
   Sidebar
 } from "semantic-ui-react";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { logout } from "../../store/actions/auth";
 import { getWidth } from "../../utils";
 
 class MobileContainer extends Component {
@@ -19,9 +22,8 @@ class MobileContainer extends Component {
   handleToggle = () => this.setState({ sidebarOpened: true });
 
   render() {
-    const { children } = this.props;
+    const { children, isAuthenticated } = this.props;
     const { sidebarOpened } = this.state;
-
     return (
       <Responsive
         as={Sidebar.Pushable}
@@ -36,14 +38,41 @@ class MobileContainer extends Component {
           vertical
           visible={sidebarOpened}
         >
-          <Menu.Item as="a" active>
+          <Menu.Item
+            active={this.props.location.pathname === "/"}
+            onClick={() => this.props.history.push("/")}
+          >
             Home
           </Menu.Item>
-          <Menu.Item as="a">Work</Menu.Item>
-          <Menu.Item as="a">Company</Menu.Item>
-          <Menu.Item as="a">Careers</Menu.Item>
-          <Menu.Item as="a">Log in</Menu.Item>
-          <Menu.Item as="a">Sign Up</Menu.Item>
+          <Menu.Item
+            active={this.props.location.pathname === "/demo"}
+            onClick={() => this.props.history.push("/demo")}
+          >
+            Demo
+          </Menu.Item>
+          <Menu.Item position="right">
+            {isAuthenticated ? (
+              <Button inverted onClick={() => this.props.logout()}>
+                Logout
+              </Button>
+            ) : (
+              <React.Fragment>
+                <Button
+                  inverted
+                  onClick={() => this.props.history.push("/login")}
+                >
+                  Login
+                </Button>
+                <Button
+                  inverted
+                  style={{ marginLeft: "0.5em" }}
+                  onClick={() => this.props.history.push("/signup")}
+                >
+                  Signup
+                </Button>
+              </React.Fragment>
+            )}
+          </Menu.Item>
         </Sidebar>
 
         <Sidebar.Pusher dimmed={sidebarOpened}>
@@ -59,12 +88,27 @@ class MobileContainer extends Component {
                   <Icon name="sidebar" />
                 </Menu.Item>
                 <Menu.Item position="right">
-                  <Button as="a" inverted>
-                    Log in
-                  </Button>
-                  <Button as="a" inverted style={{ marginLeft: "0.5em" }}>
-                    Sign Up
-                  </Button>
+                  {isAuthenticated ? (
+                    <Button inverted onClick={() => this.props.logout()}>
+                      Logout
+                    </Button>
+                  ) : (
+                    <React.Fragment>
+                      <Button
+                        inverted
+                        onClick={() => this.props.history.push("/login")}
+                      >
+                        Login
+                      </Button>
+                      <Button
+                        inverted
+                        style={{ marginLeft: "0.5em" }}
+                        onClick={() => this.props.history.push("/signup")}
+                      >
+                        Signup
+                      </Button>
+                    </React.Fragment>
+                  )}
                 </Menu.Item>
               </Menu>
             </Container>
@@ -81,4 +125,21 @@ MobileContainer.propTypes = {
   children: PropTypes.node
 };
 
-export default MobileContainer;
+const mapStateToProps = state => {
+  return {
+    isAuthenticated: state.auth.token !== null
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    logout: () => dispatch(logout())
+  };
+};
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(MobileContainer)
+);
