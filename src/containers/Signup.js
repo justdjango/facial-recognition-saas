@@ -24,7 +24,6 @@ class RegistrationForm extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     const { username, email, password, confirmPassword } = this.state;
-    console.log(username, email, password, confirmPassword);
     if (
       username !== "" &&
       email !== "" &&
@@ -48,7 +47,7 @@ class RegistrationForm extends React.Component {
 
   comparePasswordLengths = () => {
     const { password, confirmPassword } = this.state;
-    if (password.length >= 6 && confirmPassword >= 6) {
+    if (password.length >= 6 && confirmPassword.length >= 6) {
       return true;
     } else {
       this.setState({

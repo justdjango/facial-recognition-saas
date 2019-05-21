@@ -81,8 +81,11 @@ class UserDetailsView(APIView):
 
     def get(self, request, *args, **kwargs):
         user = get_user_from_token(request)
+        membership = user.membership
+
         obj = {
-            'membershipType': 'free_trial'
+            'membershipType': membership.get_type_display(),
+            'free_trial_end_date': membership.end_date
         }
         return Response(obj)
 
