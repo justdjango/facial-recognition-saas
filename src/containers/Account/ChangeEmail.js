@@ -2,15 +2,39 @@ import React from "react";
 import { Form, Input, Message, Header, Button } from "semantic-ui-react";
 import Shell from "./Shell";
 import { authAxios } from "../../utils";
-import { changeEmailURL } from "../../constants";
+import { changeEmailURL, emailURL } from "../../constants";
 
 class ChangeEmail extends React.Component {
   state = {
-    currentEmail: "myeail@gmail.com",
+    currentEmail: "",
     email: "",
     confirmEmail: "",
     error: null,
     loading: false
+  };
+
+  componentDidMount() {
+    this.handleUserDetails();
+  }
+
+  handleUserDetails = () => {
+    this.setState({
+      loading: true
+    });
+    authAxios
+      .get(emailURL)
+      .then(res => {
+        this.setState({
+          loading: false,
+          currentEmail: res.data.email
+        });
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          error: err.response.data.message
+        });
+      });
   };
 
   handleChange = e => {
@@ -35,7 +59,7 @@ class ChangeEmail extends React.Component {
         authAxios
           .post(changeEmailURL, {
             email,
-            confirmEmail
+            confirm_email: confirmEmail
           })
           .then(res => {
             this.setState({

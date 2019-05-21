@@ -1,8 +1,20 @@
 from django.shortcuts import render
+from django.contrib.auth import get_user_model
+from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
+from .serializers import ChangeEmailSerializer
+
+User = get_user_model()
+
+
+def get_user_from_token(request):
+    key = request.META.get("HTTP_AUTHORIZATION").split(' ')[1]
+    token = Token.objects.get(key=key)
+    user = User.objects.get(id=token.user_id)
+    return user
 
 
 class FileUploadView(APIView):
@@ -12,8 +24,28 @@ class FileUploadView(APIView):
         return Response({"test": True}, status=HTTP_200_OK)
 
 
+class UserEmailView(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, request, *args, **kwargs):
+        user = get_user_from_token(request)
+        obj = {'email': user.email}
+        return Response(obj)
+
+
 class ChangeEmailView(APIView):
     permission_classes = (IsAuthenticated, )
 
     def post(self, request, *args, **kwargs):
-        return Response({"test": True}, status=HTTP_200_OK)
+        user = get_user_from_token(request)
+        email_serializer = ChangeEmailSerializer(data=request.data)
+        if email_serializer.is_valid():
+            print(email_serializer.data)
+            email = email_serializer.data.get('email')
+            confirm_email = email_serializer.data.get('confirm_email')
+            if email == confirm_email:
+                user.email = email
+                user.save()
+                return Response({"email": email}, status=HTTP_200_OK)
+            return Response({"message": "The emails did not match"}, status=HTTP_400_BAD_REQUEST)
+        return Response({"message": "Did not receive the correct data"}, status=HTTP_400_BAD_REQUEST)

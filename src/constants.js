@@ -9,4 +9,5 @@ export const APIEndpoint = `${host}/api`;
 
 export const fileUploadURL = `${APIEndpoint}/demo/`;
 export const facialRecognitionURL = `${APIEndpoint}/upload/`;
+export const emailURL = `${APIEndpoint}/email/`;
 export const changeEmailURL = `${APIEndpoint}/change-email/`;
