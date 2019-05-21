@@ -77,9 +77,22 @@ class ChangePasswordView(APIView):
 
 
 class UserDetailsView(APIView):
+    permission_classes = (IsAuthenticated, )
+
     def get(self, request, *args, **kwargs):
         user = get_user_from_token(request)
         obj = {
             'membershipType': 'free_trial'
         }
         return Response(obj)
+
+
+class SubscribeView(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def post(self, request, *args, **kwargs):
+        user = get_user_from_token(request)
+        # update the user membership
+        return Response({
+            'test': True
+        })
