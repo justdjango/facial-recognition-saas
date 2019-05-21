@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
-from .serializers import ChangeEmailSerializer
+from .serializers import ChangeEmailSerializer, ChangePasswordSerializer
 
 User = get_user_model()
 
@@ -48,4 +48,29 @@ class ChangeEmailView(APIView):
                 user.save()
                 return Response({"email": email}, status=HTTP_200_OK)
             return Response({"message": "The emails did not match"}, status=HTTP_400_BAD_REQUEST)
+        return Response({"message": "Did not receive the correct data"}, status=HTTP_400_BAD_REQUEST)
+
+
+class ChangePasswordView(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def post(self, request, *args, **kwargs):
+        user = get_user_from_token(request)
+        password_serializer = ChangePasswordSerializer(data=request.data)
+        if password_serializer.is_valid():
+            password = password_serializer.data.get('password')
+            confirm_password = password_serializer.data.get('confirm_password')
+            current_password = password_serializer.data.get('current_password')
+            auth_user = authenticate(
+                username=user.username,
+                password=current_password
+            )
+            if auth_user is not None:
+                if password == confirm_password:
+                    auth_user.set_password(password)
+                    auth_user.save()
+                    return Response(status=HTTP_200_OK)
+                else:
+                    return Response({"message": "The passwords did not match"}, status=HTTP_400_BAD_REQUEST)
+            return Response({"message": "Incorrect user details"}, status=HTTP_400_BAD_REQUEST)
         return Response({"message": "Did not receive the correct data"}, status=HTTP_400_BAD_REQUEST)
