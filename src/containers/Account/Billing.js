@@ -63,9 +63,9 @@ class Billing extends React.Component {
           </React.Fragment>
         ) : details.membershipType === member ? (
           <React.Fragment>
-            <p>Next billing date: 25 June 2019</p>
+            <p>Next billing date: {details.next_billing_date}</p>
             <p>API requests this month: {details.api_request_count}</p>
-            <p>Amount due: $20</p>
+            <p>Amount due: ${details.amount_due}</p>
           </React.Fragment>
         ) : details.membershipType === not_member ? (
           <React.Fragment>

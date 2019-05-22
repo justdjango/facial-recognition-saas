@@ -13,6 +13,7 @@ import {
   Dimmer
 } from "semantic-ui-react";
 import axios from "axios";
+import { authAxios } from "../utils";
 import { fileUploadURL, facialRecognitionURL } from "../constants";
 import FaceIMG from "../assets/images/face.png";
 import ShortParagraphIMG from "../assets/images/short_paragraph.png";
@@ -75,7 +76,8 @@ class Demo extends React.Component {
       }
     };
     axios
-      .post(fileUploadURL, formData, config)
+      // authAxios
+      .post(fileUploadURL, formData, config) //  facialRecognitionURL
       .then(res => {
         this.setState({
           data: res.data,

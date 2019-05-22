@@ -34,13 +34,15 @@ class Membership(models.Model):
     end_date = models.DateTimeField()
     stripe_subscription_id = models.CharField(
         max_length=40, blank=True, null=True)
+    stripe_subscription_item_id = models.CharField(
+        max_length=40, blank=True, null=True)
 
     def __str__(self):
         return self.user.username
 
 
 class Payment(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
     amount = models.FloatField()
 
@@ -52,6 +54,7 @@ class TrackedRequest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     endpoint = models.CharField(max_length=50)
     timestamp = models.DateTimeField(auto_now_add=True)
+    usage_record_id = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return self.user.username

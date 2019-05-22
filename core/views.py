@@ -1,4 +1,5 @@
 import datetime
+import math
 from django.conf import settings
 from django.contrib.auth import get_user_model, authenticate
 from django.shortcuts import render
@@ -112,10 +113,17 @@ class UserDetailsView(APIView):
         tracked_request_count = TrackedRequest.objects \
             .filter(user=user, timestamp__gte=month_start) \
             .count()
+        amount_due = 0
+        if user.is_member:
+            amount_due = stripe.Invoice.upcoming(
+                customer=user.stripe_customer_id)['amount_due'] / 100
+            print(amount_due)
         obj = {
             'membershipType': membership.get_type_display(),
             'free_trial_end_date': membership.end_date,
-            'api_request_count': tracked_request_count
+            'next_billing_date': membership.end_date,
+            'api_request_count': tracked_request_count,
+            'amount_due': amount_due
         }
         return Response(obj)
 
@@ -148,6 +156,7 @@ class SubscribeView(APIView):
 
                 # update the membership
                 membership.stripe_subscription_id = subscription.id
+                membership.stripe_subscription_item_id = subscription['items']['data'][0]['id']
                 membership.type = 'M'
                 membership.start_date = datetime.datetime.now()
                 membership.end_date = datetime.datetime.fromtimestamp(
@@ -178,11 +187,8 @@ class SubscribeView(APIView):
             return Response({'message': "There was an error. You have not been billed. If this persists please contact support"}, status=HTTP_400_BAD_REQUEST)
 
         except Exception as e:
+            print(e)
             return Response({"message": "We apologize for the error. We have been informed and are working on the problem."}, status=HTTP_400_BAD_REQUEST)
-
-        return Response({
-            'test': True
-        })
 
 
 class ImageRecognitionView(APIView):
@@ -190,11 +196,21 @@ class ImageRecognitionView(APIView):
 
     def post(self, request, *args, **kwargs):
         user = get_user_from_token(request)
+        membership = user.membership
         file_serializer = FileSerializer(data=request.data)
 
-        # keep track of the requests a user makes
+        usage_record_id = None
+        if user.is_member and not user.on_free_trial:
+            usage_record = stripe.UsageRecord.create(
+                quantity=1,
+                timestamp=math.floor(datetime.datetime.now().timestamp()),
+                subscription_item=membership.stripe_subscription_item_id
+            )
+            usage_record_id = usage_record.id
+
         tracked_request = TrackedRequest()
         tracked_request.user = user
+        tracked_request.usage_record_id = usage_record_id
         tracked_request.endpoint = '/api/image-recognition/'
         tracked_request.save()
 
