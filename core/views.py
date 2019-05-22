@@ -23,7 +23,6 @@ import stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 User = get_user_model()
-STRIPE_PLAN_ID = 'facial_monthly_api_call'
 
 
 def get_user_from_token(request):
@@ -151,7 +150,7 @@ class SubscribeView(APIView):
                 # create the stripe subscription
                 subscription = stripe.Subscription.create(
                     customer=customer.id,
-                    items=[{"plan": STRIPE_PLAN_ID}]
+                    items=[{"plan": settings.STRIPE_PLAN_ID}]
                 )
 
                 # update the membership
@@ -187,8 +186,33 @@ class SubscribeView(APIView):
             return Response({'message': "There was an error. You have not been billed. If this persists please contact support"}, status=HTTP_400_BAD_REQUEST)
 
         except Exception as e:
-            print(e)
             return Response({"message": "We apologize for the error. We have been informed and are working on the problem."}, status=HTTP_400_BAD_REQUEST)
+
+
+class CancelSubscription(APIView):
+    permission_classes = (IsMember, )
+
+    def post(self, request, *args, **kwargs):
+        user = get_user_from_token(request)
+        membership = user.membership
+
+        # update the stripe subscription
+        try:
+            sub = stripe.Subscription.retrieve(
+                membership.stripe_subscription_id)
+            sub.delete()
+        except Exception as e:
+            return Response({"message": "We apologize for the error. We have been informed and are working on the problem."}, status=HTTP_400_BAD_REQUEST)
+
+        # update the user
+        user.is_member = False
+        user.save()
+
+        # update the membership
+        membership.type = "N"
+        membership.save()
+
+        return Response({'message': "Your subscription has been cancelled."}, status=HTTP_200_OK)
 
 
 class ImageRecognitionView(APIView):

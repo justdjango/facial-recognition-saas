@@ -86,3 +86,7 @@ AUTH_USER_MODEL = 'core.User'
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+# Stripe plan ID
+
+STRIPE_PLAN_ID = 'facial_monthly_api_call'

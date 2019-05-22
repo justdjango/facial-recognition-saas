@@ -7,7 +7,8 @@ from .views import (
     UserDetailsView,
     SubscribeView,
     ImageRecognitionView,
-    APIKeyView
+    APIKeyView,
+    CancelSubscription
 )
 
 app_name = 'core'
@@ -19,6 +20,8 @@ urlpatterns = [
     path('change-password/', ChangePasswordView.as_view(), name='change-password'),
     path('billing/', UserDetailsView.as_view(), name='billing'),
     path('subscribe/', SubscribeView.as_view(), name='subscribe'),
+    path('cancel-subscription/', CancelSubscription.as_view(),
+         name='cancel-subscription'),
     path('upload/', ImageRecognitionView.as_view(), name='image-recognition'),
     path('api-key/', APIKeyView.as_view(), name='api-key')
 ]

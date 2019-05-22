@@ -18,3 +18,4 @@ export const changePasswordURL = `${APIEndpoint}/change-password/`;
 export const billingURL = `${APIEndpoint}/billing/`;
 export const subscribeURL = `${APIEndpoint}/subscribe/`;
 export const APIkeyURL = `${APIEndpoint}/api-key/`;
+export const cancelSubscriptionURL = `${APIEndpoint}/cancel-subscription/`;
