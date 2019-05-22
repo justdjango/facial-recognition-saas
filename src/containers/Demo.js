@@ -30,11 +30,18 @@ class Demo extends React.Component {
   };
 
   handleFileChange = e => {
-    this.setState({
-      fileName: e.target.files[0].name,
-      file: e.target.files[0],
-      error: null
-    });
+    if (e.target.files[0]) {
+      const size = e.target.files[0].size;
+      if (size > 5000000) {
+        this.setState({ error: "Image size is greater than 5MB" });
+      } else {
+        this.setState({
+          fileName: e.target.files[0].name,
+          file: e.target.files[0],
+          error: null
+        });
+      }
+    }
   };
 
   handleSubmit = e => {
