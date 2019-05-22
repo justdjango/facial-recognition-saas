@@ -1,9 +1,12 @@
 let DEBUG = true;
 let host = "http://127.0.0.1:8000";
-
+let stripePublishKey = "";
 if (!DEBUG) {
   host = "https://domain.com";
+  stripePublishKey = "";
 }
+
+export { stripePublishKey };
 
 export const APIEndpoint = `${host}/api`;
 

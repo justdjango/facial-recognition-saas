@@ -7,7 +7,7 @@ import {
 } from "react-stripe-elements";
 import { Divider, Button, Message } from "semantic-ui-react";
 import { authAxios } from "../../utils";
-import { subscribeURL } from "../../constants";
+import { subscribeURL, stripePublishKey } from "../../constants";
 
 class StripeForm extends React.Component {
   state = {
@@ -76,7 +76,7 @@ const WrappedStripeForm = injectStripe(StripeForm);
 class SubscribeForm extends React.Component {
   render() {
     return (
-      <StripeProvider apiKey="">
+      <StripeProvider apiKey={stripePublishKey}>
         <div>
           <Elements>
             <WrappedStripeForm {...this.props} />
