@@ -6,7 +6,8 @@ from .views import (
     ChangePasswordView,
     UserDetailsView,
     SubscribeView,
-    ImageRecognitionView
+    ImageRecognitionView,
+    APIKeyView
 )
 
 app_name = 'core'
@@ -18,5 +19,6 @@ urlpatterns = [
     path('change-password/', ChangePasswordView.as_view(), name='change-password'),
     path('billing/', UserDetailsView.as_view(), name='billing'),
     path('subscribe/', SubscribeView.as_view(), name='subscribe'),
-    path('upload/', ImageRecognitionView.as_view(), name='image-recognition')
+    path('upload/', ImageRecognitionView.as_view(), name='image-recognition'),
+    path('api-key/', APIKeyView.as_view(), name='api-key')
 ]
