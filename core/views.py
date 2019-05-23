@@ -34,6 +34,7 @@ def get_user_from_token(request):
 
 class FileUploadView(APIView):
     permission_classes = (AllowAny, )
+    throttle_scope = 'demo'
 
     def post(self, request, *args, **kwargs):
 
