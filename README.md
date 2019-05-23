@@ -1,6 +1,6 @@
-# Django React Boilerplate
+# Facial recognition API SAAS
 
-This repository contains a boilerplate project setup for Django and React. The project contains backend user authentication with the Django Rest Framework and rest-auth. The frontend has react redux setup for user authentication in the frontend.
+This project is a facial recognition API. Users are able to create an account, utilise a free trial of the API, and create a membership to have full access to the API. Payments are handled with Stripe. The API is built with the Django Rest Framework and the frontend is built with React. The image recognition library is OpenCV. The project is deployed on Ubuntu using Digital Ocean.
 
 ## Backend development workflow
 
@@ -18,8 +18,4 @@ npm i
 npm start
 ```
 
-## For deploying
-
-```json
-npm run build
-```
+To learn how to build this application, [head over to our website.](https://www.justdjango.com)
