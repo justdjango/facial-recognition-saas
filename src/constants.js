@@ -19,3 +19,6 @@ export const billingURL = `${APIEndpoint}/billing/`;
 export const subscribeURL = `${APIEndpoint}/subscribe/`;
 export const APIkeyURL = `${APIEndpoint}/api-key/`;
 export const cancelSubscriptionURL = `${APIEndpoint}/cancel-subscription/`;
+
+export const loginURL = `${host}/rest-auth/login/`;
+export const signupURL = `${host}/rest-auth/registration/`;

@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as actionTypes from "./actionTypes";
+import { loginURL, signupURL } from "../../constants";
 
 export const authStart = () => {
   return {
@@ -41,7 +42,7 @@ export const authLogin = (username, password) => {
   return dispatch => {
     dispatch(authStart());
     axios
-      .post("http://127.0.0.1:8000/rest-auth/login/", {
+      .post(loginURL, {
         username,
         password
       })
@@ -63,7 +64,7 @@ export const authSignup = (username, email, password1, password2) => {
   return dispatch => {
     dispatch(authStart());
     axios
-      .post("http://127.0.0.1:8000/rest-auth/registration/", {
+      .post(signupURL, {
         username,
         email,
         password1,
