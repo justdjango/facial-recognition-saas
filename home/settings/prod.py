@@ -28,3 +28,5 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 STRIPE_PUBLISH_KEY = 'pk_test_fIPmHO5lxk4fFRiahVdem0oF'
 STRIPE_SECRET_KEY = 'sk_test_OrQwuL57Skdcm6SvowLXjxmj'
+
+CORS_ORIGIN_ALLOW_ALL = True
