@@ -1,7 +1,7 @@
 let DEBUG = false;
 let host = "http://127.0.0.1:8000";
 let stripePublishKey = "pk_test_fIPmHO5lxk4fFRiahVdem0oF";
-if (!DEBUG) {
+if (DEBUG === false) {
   host = "http://165.22.94.250";
   stripePublishKey = "pk_test_fIPmHO5lxk4fFRiahVdem0oF";
 }
