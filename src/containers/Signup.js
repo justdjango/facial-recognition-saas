@@ -10,6 +10,7 @@ import {
 } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
+import Logo from "../assets/images/logo.svg";
 import { authSignup as signup } from "../store/actions/auth";
 
 class RegistrationForm extends React.Component {
@@ -79,7 +80,7 @@ class RegistrationForm extends React.Component {
         >
           <Grid.Column style={{ maxWidth: 450 }}>
             <Header as="h2" color="teal" textAlign="center">
-              <Image src="/logo.png" /> Create an account
+              <Image src={Logo} /> Create an account
             </Header>
             <Form size="large" onSubmit={this.handleSubmit}>
               <Segment stacked>
