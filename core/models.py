@@ -1,9 +1,11 @@
 from django.db import models
+from django.contrib.auth.signals import user_logged_in
 from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
 from django.conf import settings
 from django.utils import timezone
 
+import datetime
 import stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -62,7 +64,6 @@ class TrackedRequest(models.Model):
 
 def post_save_user_receiver(sender, instance, created, *args, **kwargs):
     if created:
-        import datetime
         customer = stripe.Customer.create(email=instance.email)
         instance.stripe_customer_id = customer.id
         instance.save()
@@ -75,4 +76,28 @@ def post_save_user_receiver(sender, instance, created, *args, **kwargs):
         )
 
 
+def user_logged_in_receiver(sender, user, request, **kwargs):
+    membership = user.membership
+    if user.on_free_trial:
+        # membership end date has passed
+        if membership.end_date < timezone.now():
+            user.on_free_trial = False
+
+    elif user.is_member:
+        sub = stripe.Subscription.retrieve(membership.stripe_subscription_id)
+        if sub.status == "active":
+            membership.end_date = datetime.datetime.fromtimestamp(
+                sub.current_period_end
+            )
+            user.is_member = True
+        else:
+            user.is_member = False
+    else:
+        pass
+
+    user.save()
+    membership.save()
+
+
 post_save.connect(post_save_user_receiver, sender=User)
+user_logged_in.connect(user_logged_in_receiver)
