@@ -23,12 +23,12 @@ npm start
 ```
 
 ## Deployment workflow
-Change the manage.py to use the production settings
-Change the constants.js file inside src to have DEBUG set to false
-Push to the production environment
-Run python manage.py migrate
-Run npm run build
-Run python manage.py collectstatic
+1. Change the manage.py to use the production settings
+2. Change the constants.js file inside src to have DEBUG set to false
+3. Push to the production environment
+4. Run python manage.py migrate
+5. Run npm run build
+6. Run python manage.py collectstatic
 
 ## Disclaimer
 This project does not cover concepts of image recognition - it is a proof of concept teaching how to take an idea from scratch to something real.
