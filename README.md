@@ -2,7 +2,7 @@
 
 [![alt text](https://github.com/justdjango/facial-recognition-saas/blob/master/thumbnail.png "Logo")](https://www.justdjango.com)
 
-**Live demo: http://165.22.94.250 **
+**Live demo:** http://165.22.94.250
 
 To learn how to build this application, [head over to our website.](https://www.justdjango.com)
 
