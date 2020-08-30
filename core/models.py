@@ -82,6 +82,8 @@ def user_logged_in_receiver(sender, user, request, **kwargs):
         # membership end date has passed
         if membership.end_date < timezone.now():
             user.on_free_trial = False
+            #update the membership
+            membership.type = 'N'
 
     elif user.is_member:
         sub = stripe.Subscription.retrieve(membership.stripe_subscription_id)
@@ -92,6 +94,8 @@ def user_logged_in_receiver(sender, user, request, **kwargs):
             user.is_member = True
         else:
             user.is_member = False
+            #update the membership
+            membership.type = 'N'
     else:
         pass
 
