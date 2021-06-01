@@ -23,5 +23,5 @@ requests-oauthlib==1.0.0
 six==1.11.0
 sqlparse==0.3.0
 stripe==2.28.1
-urllib3==1.24.3
+urllib3==1.26.5
 whitenoise==3.3.1
