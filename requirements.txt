@@ -11,7 +11,7 @@ gunicorn==19.7.1
 idna==2.7
 numpy==1.16.3
 oauthlib==2.1.0
-opencv-python==4.1.0.25
+opencv-python==4.2.0.32
 pep8==1.7.1
 Pillow==6.0.0
 psycopg2-binary==2.8.2
