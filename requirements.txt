@@ -9,7 +9,7 @@ django-rest-auth==0.9.3
 djangorestframework==3.9.4
 gunicorn==19.7.1
 idna==2.7
-numpy==1.16.3
+numpy==1.22.0
 oauthlib==2.1.0
 opencv-python==4.1.0.25
 pep8==1.7.1
